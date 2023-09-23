@@ -256,3 +256,5 @@ function future:register_callback(call, func)
         end
     end)
 end
+
+return future
