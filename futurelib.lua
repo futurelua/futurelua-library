@@ -1,4 +1,4 @@
-local future = {
+local a = {
     callbacks = {}
 }
 local ffi = require("ffi")
@@ -120,40 +120,40 @@ local fn_get_cursor_pos            = isurface:get_function(100, "unsigned int", 
 local fn_set_cursor_pos            = isurface:get_function(101, "unsigned int", {"int", "int"})
 local fn_draw_outlined_circle      = isurface:get_function(103, "void", {"int", "int", "int", "int"})
 local fn_draw_filled_rect_fade     = isurface:get_function(123, "void", {"int", "int", "int", "int", "unsigned int", "unsigned int", "bool"})
-function future:draw_set_color(r, g, b, a) 
+function a:draw_set_color(r, g, b, a) 
     self.fn_draw_set_color(r, g, b, a)
 end
-function future:draw_filled_rect(x0, y0, x1, y1) 
+function a:draw_filled_rect(x0, y0, x1, y1) 
     self.fn_draw_filled_rect(x0, y0, x1, y1)
 end
-function future:draw_outlined_rect(x0, y0, x1, y1) 
+function a:draw_outlined_rect(x0, y0, x1, y1) 
     self.fn_draw_outlined_rect(x0, y0, x1, y1)
 end
-function future:draw_line(x0, y0, x1, y1) 
+function a:draw_line(x0, y0, x1, y1) 
     self.fn_draw_line(x0, y0, x1, y1)
 end
-function future:draw_poly_line(x, y, count) 
+function a:draw_poly_line(x, y, count) 
     local int_ptr = ffi.typeof("int[1]") 
     local x1 = ffi.new(int_ptr, x)
     local y1 = ffi.new(int_ptr, y)
     self.fn_draw_poly_line(x1, y1, count)
 end
-function future:draw_outlined_circle(x, y, radius, segments) 
+function a:draw_outlined_circle(x, y, radius, segments) 
     self.fn_draw_outlined_circle(x, y, radius, segments)
 end
-function future:draw_filled_rect_fade(x0, y0, x1, y1, alpha0, alpha1, horizontal) 
+function a:draw_filled_rect_fade(x0, y0, x1, y1, alpha0, alpha1, horizontal) 
     self.fn_draw_filled_rect_fade(x0, y0, x1, y1, alpha0, alpha1, horizontal)
 end
-function future:draw_set_text_font(font) 
+function a:draw_set_text_font(font) 
     self.fn_draw_set_text_font(font)
 end
-function future:draw_set_text_color(r, g, b, a) 
+function a:draw_set_text_color(r, g, b, a) 
     self.fn_draw_set_text_color(r, g, b, a)
 end
-function future:draw_set_text_pos(x, y) 
+function a:draw_set_text_pos(x, y) 
     self.fn_draw_set_text_pos(x, y)
 end
-function future:draw_print_text(text, localized) 
+function a:draw_print_text(text, localized) 
     if localized then 
         local char_buffer = ffi.new('char[1024]')  
         convert_unicode_to_ansi(text, char_buffer, 1024)
@@ -165,25 +165,25 @@ function future:draw_print_text(text, localized)
         self.fn_draw_print_text(wide_buffer, text:len(), 0)
     end
 end
-function future:draw_get_texture_id(filename)
+function a:draw_get_texture_id(filename)
     return(self.fn_draw_get_texture_id(filename))
 end
-function future:draw_get_texture_file(id, filename, maxlen)
+function a:draw_get_texture_file(id, filename, maxlen)
     return(self.fn_draw_get_texture_file(id, filename, maxlen))
 end
-function future:draw_set_texture_file(id, filename, hardwarefilter, forcereload)
+function a:draw_set_texture_file(id, filename, hardwarefilter, forcereload)
     self.fn_draw_set_texture_file(id, filename, hardwarefilter, forcereload)
 end
-function future:draw_set_texture_rgba(id, rgba, wide, tall)
+function a:draw_set_texture_rgba(id, rgba, wide, tall)
     self.fn_draw_set_texture_rgba(id, rgba, wide, tall)
 end
-function future:draw_set_texture(id)
+function a:draw_set_texture(id)
     self.fn_draw_set_texture(id)
 end
-function future:delete_texture_by_id(id)
+function a:delete_texture_by_id(id)
     self.fn_delete_texture_by_id(id)
 end
-function future:draw_get_texture_size(id)
+function a:draw_get_texture_size(id)
     local int_ptr = ffi.typeof("int[1]") 
     local wide_ptr = int_ptr() local tall_ptr = int_ptr()
     self.fn_draw_get_texture_size(id, wide_ptr, tall_ptr)
@@ -191,19 +191,19 @@ function future:draw_get_texture_size(id)
     local tall = tonumber(ffi.cast("int", tall_ptr[0]))
     return wide, tall
 end
-function future:draw_textured_rect(x0, y0, x1, y1)
+function a:draw_textured_rect(x0, y0, x1, y1)
     self.fn_draw_textured_rect(x0, y0, x1, y1)
 end
-function future:is_texture_id_valid(id)
+function a:is_texture_id_valid(id)
     return(self.fn_is_texture_id_valid(id))
 end
-function future:create_new_texture_id(id)
+function a:create_new_texture_id(id)
     return(self.fn_create_new_texture_id(id))
 end
-function future:create_font() 
+function a:create_font() 
     return(self.fn_create_font())
 end
-function future:set_font_glyph(font, font_name, tall, weight, flags) 
+function a:set_font_glyph(font, font_name, tall, weight, flags) 
     local x = 0
     if type(flags) == "number" then
         x = flags
@@ -215,7 +215,7 @@ function future:set_font_glyph(font, font_name, tall, weight, flags)
     self.fn_set_font_glyph(font, font_name, tall, weight, 0, 0, bit.bor(x), 0, 0)
 end
 
-function future:get_text_size(font, text) 
+function a:get_text_size(font, text) 
     local wide_buffer = ffi.new('wchar_t[1024]') 
     local int_ptr = ffi.typeof("int[1]") 
     local wide_ptr = int_ptr() local tall_ptr = int_ptr()
@@ -226,7 +226,7 @@ function future:get_text_size(font, text)
     local tall = tonumber(ffi.cast("int", tall_ptr[0]))
     return wide, tall
 end
-function future:get_cursor_pos() 
+function a:get_cursor_pos() 
    local int_ptr = ffi.typeof("int[1]") 
    local x_ptr = int_ptr() local y_ptr = int_ptr()
    self.fn_get_cursor_pos(x_ptr, y_ptr)
@@ -234,25 +234,27 @@ function future:get_cursor_pos()
    local y = tonumber(ffi.cast("int", y_ptr[0]))
    return x, y
 end
-function future:set_cursor_pos(x, y) 
+function a:set_cursor_pos(x, y) 
     self.fn_set_cursor_pos(x, y)
 end
-function future:unlock_cursor() 
+function a:unlock_cursor() 
     self.fn_unlock_cursor()
 end
-function future:lock_cursor() 
+function a:lock_cursor() 
     self.fn_lock_cursor()
 end
 
 
-function future:register_callback(call, func)
-    if not future.callbacks[call] then
-        future.callbacks[call] = {}
+function a:register_callback(call, func)
+    if not a.callbacks[call] then
+        a.callbacks[call] = {}
     end
-    table.insert(future.callbacks[call], func)
-    client.set_event_callback(future.callbacks[call], function(e)
-        for i = 1, #future.callbacks[call] do
-            future.callbacks[call][i]()
+    table.insert(a.callbacks[call], func)
+    client.set_event_callback(a.callbacks[call], function(e)
+        for i = 1, #a.callbacks[call] do
+            a.callbacks[call][i]()
         end
     end)
 end
+
+return a
